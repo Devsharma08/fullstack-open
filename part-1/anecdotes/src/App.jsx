@@ -25,10 +25,15 @@ const App = () => {
       }}>
       Vote
       </button>
-      <br />
+      <div>
+        <h2>Anecdote of the day</h2>
       {anecdotes[selected]}
+      </div>
+      <div>
+        <h2>Most voted anecdote</h2>
+        {anecdotes[votes.indexOf(Math.max(...votes))]}
+      </div>
     </div>
   )
 }
-
 export default App
