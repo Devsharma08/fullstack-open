@@ -21,7 +21,7 @@ const Content = ({ parts }) => {
 }
 
 const Total = ({ parts }) => {
-  const totalExercises = parts[0].exercises + parts[1].exercises + parts[2].exercises + parts[3].exercises
+  const totalExercises = parts.reduce((sum, part) => sum + part.exercises, 0)
   return <h4>Total number of exercises: {totalExercises}</h4>
 }
 
