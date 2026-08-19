@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 const App = () => {
-   const [persons, setPersons] = useState([{name: 'Arto Hellas'}]) 
+   const [persons, setPersons] = useState([{name: 'Arto Hellas', phoneno: '040-123456'}]) 
   const [newName, setNewName] = useState('')
+  const [newPhoneNo, setNewPhoneNo] = useState('')
 
   const handleChangePersonName = (event) => {
     event.preventDefault();
@@ -21,12 +22,14 @@ const App = () => {
   const handleAddPerson = (event) => {
     event.preventDefault();
     const personObject = {
-      name: newName
+      name: newName,
+      phoneno: newPhoneNo
     }
     if (!checkIfPersonalreadyExists(personObject)) {
       setPersons([...persons, personObject]);
     }
     setNewName('');
+    setNewPhoneNo('');
   }
 
   return (
@@ -34,7 +37,12 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input value={newName} onChange={handleChangePersonName} />
+          <label>name: </label>
+          <input value={newName} onChange={handleChangePersonName} />
+        </div>
+        <div>
+          <label>phone: </label>
+          <input value={newPhoneNo} onChange={(event) => setNewPhoneNo(event.target.value)} />
         </div>
         <div>
           <button onClick={handleAddPerson} type="submit">add</button>
@@ -43,7 +51,7 @@ const App = () => {
       <h2>Numbers</h2>
       {
         persons.length === 0 ? <p>No persons to display</p> :
-        persons.map(person => <p key={person.name}>{person.name}</p>)
+        persons.map(person => <p key={person.name}>{person.name} <span>{person.phoneno}</span></p>)
       }
     </div>
   )
