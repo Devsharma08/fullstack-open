@@ -1,6 +1,11 @@
 import { useState } from 'react'
+import Filter from './Filter';
+import PersonForm from './PersonForm';
+import Persons from './Persons';
 
 const App = () => {
+
+
    const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
     { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
@@ -11,13 +16,16 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhoneNo, setNewPhoneNo] = useState('');
   const [filterText, setFilterText] = useState('');
-  const [filteredPersons, setFilteredPersons] = useState(persons);
 
   const handleChangePersonName = (event) => {
     event.preventDefault();
     setNewName(event.target.value);
   }
 
+  const handleChangePhoneNo = (event) => {
+    event.preventDefault();
+    setNewPhoneNo(event.target.value);
+  }
 
   const checkIfPersonalreadyExists = (personObject) => {
     const personExists = persons.filter(person => person.name === personObject.name);
@@ -29,11 +37,7 @@ const App = () => {
   }
 
   const handleFiltering = (event) => {
-    event.preventDefault();
     setFilterText(event.target.value);
-    // filter the persons array based on the filterText
-    const filtered = persons.filter(person => person.name.toLowerCase().includes(filterText.toLowerCase()));
-    setFilteredPersons(filtered);
   }
 
   const handleAddPerson = (event) => {
@@ -41,6 +45,7 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newPhoneNo,
+      id: persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1
     }
     if (!checkIfPersonalreadyExists(personObject)) {
       setPersons([...persons, personObject]);
@@ -53,34 +58,10 @@ const App = () => {
      <div>
       <h2>Phonebook</h2>
 
-      <div>
-        <span>filter shown with </span>
-        <input value={filterText}  onChange={handleFiltering} />
-      </div>
-      {
-        filterText.length > 0 ?
-        filteredPersons.length === 0 ? <p>No persons to display</p> :
-        filteredPersons.map((person,i) => <p key={person.id}>{person.name} <span>{person.number}</span></p>) :
-        null
-      }
-      <form>
-        <div>
-          <label>name: </label>
-          <input value={newName} onChange={handleChangePersonName} />
-        </div>
-        <div>
-          <label>phone: </label>
-          <input value={newPhoneNo} onChange={(event) => setNewPhoneNo(event.target.value)} />
-        </div>
-        <div>
-          <button onClick={handleAddPerson} type="submit">add</button>
-        </div>
-      </form>
+      <Filter filter={filterText} handleFilterChange={handleFiltering} />
+      <PersonForm addPerson={handleAddPerson} newName={newName} handleNameChange={handleChangePersonName} newNumber={newPhoneNo} handleNumberChange={handleChangePhoneNo} />
       <h2>Numbers</h2>
-      {
-        persons.length === 0 ? <p>No persons to display</p> :
-        persons.map((person,i) => <p key={person.id}>{person.name} <span>{person.number}</span></p>)
-      }
+      <Persons persons={persons} filter={filterText} />
     </div>
   )
 }
