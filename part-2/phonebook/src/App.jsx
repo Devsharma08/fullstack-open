@@ -1,9 +1,7 @@
 import { useState } from 'react'
 
 const App = () => {
-   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+   const [persons, setPersons] = useState([{name: 'Arto Hellas'}]) 
   const [newName, setNewName] = useState('')
 
   const handleChangePersonName = (event) => {
@@ -11,14 +9,26 @@ const App = () => {
     setNewName(event.target.value);
   }
 
+  const checkIfPersonalreadyExists = (personObject) => {
+    const personExists = persons.filter(person => person.name === personObject.name);
+    if (personExists.length > 0) {
+      alert(`${personObject.name} is already added to phonebook`);
+      return true;
+    }
+    return false;
+  }
+
   const handleAddPerson = (event) => {
     event.preventDefault();
     const personObject = {
       name: newName
     }
-    setPersons(persons.concat(personObject));
+    if (!checkIfPersonalreadyExists(personObject)) {
+      setPersons([...persons, personObject]);
+    }
     setNewName('');
   }
+
   return (
      <div>
       <h2>Phonebook</h2>
