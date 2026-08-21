@@ -4,8 +4,8 @@ const Persons = ({ persons, filter }) => {
     <div>
       {
         filter?.length > 0 
-          ? filteredPersons.map((person) => <p key={person.id}>{person.name} <span>{person.number}</span></p>)
-          : persons.map((person) => <p key={person.id}>{person.name} <span>{person.number}</span></p>)
+          ? filteredPersons?.map((person) => <p key={person.id}>{person.name} <span>{person.number}</span></p>)
+          : persons?.map((person) => <p key={person.id}>{person.name} <span>{person.number}</span></p>)
       }
     </div>
   )
