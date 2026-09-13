@@ -32,6 +32,13 @@ const getAll = (request, response) => {
 
 app.get('/api/persons', getAll);
 
+app.get('/info', (request, response) => {
+    response.send(`
+        <p>Phonebook has info for ${persons.length} people</p>
+        <p>${new Date()}</p>
+    `);
+});
+
 const port = 3001;
 app.listen(port,()=>{
     console.log("the server is listening on port",port);
