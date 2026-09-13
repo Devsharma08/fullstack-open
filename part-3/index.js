@@ -32,6 +32,17 @@ const getAll = (request, response) => {
 
 app.get('/api/persons', getAll);
 
+app.post('/api/persons', (request, response) => {
+    const person = {
+        id: Math.floor(Math.random() * 10000000000).toString(),
+        name: request.body.name,
+        number: request.body.number
+    };
+
+    persons.push(person);
+    response.status(201).json(person);
+});
+
 app.get('/api/persons/:id', (request, response) => {
     const person = persons.find(entry => entry.id === request.params.id);
 
