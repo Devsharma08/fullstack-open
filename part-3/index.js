@@ -33,10 +33,20 @@ const getAll = (request, response) => {
 app.get('/api/persons', getAll);
 
 app.post('/api/persons', (request, response) => {
+    const { name, number } = request.body;
+
+    if (!name || !number) {
+        return response.status(400).json({ error: 'name or number missing' });
+    }
+
+    if (persons.some(person => person.name === name)) {
+        return response.status(400).json({ error: 'name must be unique' });
+    }
+
     const person = {
         id: Math.floor(Math.random() * 10000000000).toString(),
-        name: request.body.name,
-        number: request.body.number
+        name,
+        number
     };
 
     persons.push(person);
