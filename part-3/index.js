@@ -42,6 +42,17 @@ app.get('/api/persons/:id', (request, response) => {
     response.json(person);
 });
 
+app.delete('/api/persons/:id', (request, response) => {
+    const personIndex = persons.findIndex(entry => entry.id === request.params.id);
+
+    if (personIndex === -1) {
+        return response.status(404).json({ error: 'person not found' });
+    }
+
+    persons.splice(personIndex, 1);
+    response.status(204).end();
+});
+
 app.get('/info', (request, response) => {
     response.send(`
         <p>Phonebook has info for ${persons.length} people</p>
