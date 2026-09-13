@@ -32,6 +32,16 @@ const getAll = (request, response) => {
 
 app.get('/api/persons', getAll);
 
+app.get('/api/persons/:id', (request, response) => {
+    const person = persons.find(entry => entry.id === request.params.id);
+
+    if (!person) {
+        return response.status(404).json({ error: 'person not found' });
+    }
+
+    response.json(person);
+});
+
 app.get('/info', (request, response) => {
     response.send(`
         <p>Phonebook has info for ${persons.length} people</p>
