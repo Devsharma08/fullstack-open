@@ -1,8 +1,14 @@
 import express from 'express';
 import morgan from 'morgan';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const app = express();
 app.use(express.json());
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const frontendPath = path.join(__dirname, 'dist');
+app.use(express.static(frontendPath));
 
 morgan.token('body', request => JSON.stringify(request.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
@@ -83,6 +89,14 @@ app.get('/info', (request, response) => {
         <p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date()}</p>
     `);
+});
+
+app.use((request, response, next) => {
+    if (request.method === 'GET' && request.accepts('html')) {
+        return response.sendFile(path.join(frontendPath, 'index.html'));
+    }
+
+    next();
 });
 
 const port = 3001;
