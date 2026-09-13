@@ -55,12 +55,7 @@ const App = () => {
 
     const existingPerson = persons.find(person => person.name === newName)
     if (existingPerson) {
-      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        personsService.update(existingPerson.id, personObject).then(updatedPerson => {
-          setPersons(persons.map(person => person.id === existingPerson.id ? updatedPerson : person));
-          setSuccess(`User ${newName} added successfully`);
-        }).catch(error => setError(error.response?.data?.error || error.message));
-      }
+      setError(`${newName} is already added to phonebook`);
     } else {
       personsService.create(personObject).then(createdPerson => {
         setPersons(persons.concat(createdPerson));
