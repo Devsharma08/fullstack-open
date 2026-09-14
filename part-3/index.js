@@ -61,6 +61,20 @@ app.post('/api/persons', async (request, response) => {
     response.status(201).json(savedPerson);
 });
 
+app.put('/api/persons/:id', async (request, response) => {
+    const updatedPerson = await Person.findByIdAndUpdate(
+        request.params.id,
+        { name: request.body.name, number: request.body.number },
+        { new: true, runValidators: true }
+    );
+
+    if (!updatedPerson) {
+        return response.status(404).json({ error: 'person not found' });
+    }
+
+    response.json(updatedPerson);
+});
+
 app.get('/api/persons/:id', (request, response) => {
     const person = persons.find(entry => entry.id === request.params.id);
 
