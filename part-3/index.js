@@ -1,7 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import Person from './models/person.js';
 
 const app = express();
 app.use(express.json());
@@ -36,8 +38,9 @@ const persons = [
     }
 ];
 
-const getAll = (request, response) => {
-    response.json(persons);
+const getAll = async (request, response) => {
+    const people = await Person.find({});
+    response.json(people);
 }
 
 app.get('/api/persons', getAll);
@@ -100,6 +103,14 @@ app.use((request, response, next) => {
 });
 
 const port = 3001;
-app.listen(port,()=>{
-    console.log("the server is listening on port",port);
-})
+const mongoUrl = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/phonebook';
+
+mongoose.connect(mongoUrl)
+    .then(() => {
+        app.listen(port, () => {
+            console.log('the server is listening on port', port);
+        });
+    })
+    .catch(error => {
+        console.error('could not connect to MongoDB:', error.message);
+    });
