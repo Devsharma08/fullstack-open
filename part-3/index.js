@@ -15,29 +15,6 @@ app.use(express.static(frontendPath));
 morgan.token('body', request => JSON.stringify(request.body));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-const persons = [
-    {
-        id: '1',
-        name: 'Arto Hellas',
-        number: '040-123456'
-    },
-    {
-        id: '2',
-        name: 'Ada Lovelace',
-        number: '39-44-5323523'
-    },
-    {
-        id: '3',
-        name: 'Dan Abramov',
-        number: '12-43-234345'
-    },
-    {
-        id: '4',
-        name: 'Mary Poppendieck',
-        number: '39-23-6423122'
-    }
-];
-
 const getAll = async (request, response) => {
     const people = await Person.find({});
     response.json(people);
@@ -75,8 +52,8 @@ app.put('/api/persons/:id', async (request, response) => {
     response.json(updatedPerson);
 });
 
-app.get('/api/persons/:id', (request, response) => {
-    const person = persons.find(entry => entry.id === request.params.id);
+app.get('/api/persons/:id', async (request, response) => {
+    const person = await Person.findById(request.params.id);
 
     if (!person) {
         return response.status(404).json({ error: 'person not found' });
@@ -95,9 +72,11 @@ app.delete('/api/persons/:id', async (request, response) => {
     response.status(204).end();
 });
 
-app.get('/info', (request, response) => {
+app.get('/info', async (request, response) => {
+    const personCount = await Person.countDocuments({});
+
     response.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
+        <p>Phonebook has info for ${personCount} people</p>
         <p>${new Date()}</p>
     `);
 });
