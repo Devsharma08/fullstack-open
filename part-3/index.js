@@ -96,6 +96,24 @@ app.use((request, response, next) => {
     next();
 });
 
+app.use((error, request, response, next) => {
+    console.error(error.message);
+
+    if (response.headersSent) {
+        return next(error);
+    }
+
+    if (error.name === 'CastError') {
+        return response.status(400).json({ error: 'malformatted id' });
+    }
+
+    if (error.name === 'ValidationError' || error.code === 11000) {
+        return response.status(400).json({ error: error.message });
+    }
+
+    response.status(500).json({ error: 'internal server error' });
+});
+
 const port = 3001;
 const mongoUrl = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/phonebook';
 
