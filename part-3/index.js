@@ -71,14 +71,13 @@ app.get('/api/persons/:id', (request, response) => {
     response.json(person);
 });
 
-app.delete('/api/persons/:id', (request, response) => {
-    const personIndex = persons.findIndex(entry => entry.id === request.params.id);
+app.delete('/api/persons/:id', async (request, response) => {
+    const deletedPerson = await Person.findByIdAndDelete(request.params.id);
 
-    if (personIndex === -1) {
+    if (!deletedPerson) {
         return response.status(404).json({ error: 'person not found' });
     }
 
-    persons.splice(personIndex, 1);
     response.status(204).end();
 });
 
